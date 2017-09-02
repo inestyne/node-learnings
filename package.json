@@ -1,0 +1,13 @@
+{
+  "name": "knex-starter",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "index.js"
+  },
+  "dependencies": {
+    "dotenv": "^4.0.0",
+    "knex": "^0.13.0",
+    "mysql2": "^1.4.2"
+  },
+  "devDependencies": {}
+}
