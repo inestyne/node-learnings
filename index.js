@@ -5,5 +5,5 @@ require('dotenv').config();
 var knex = require('knex')(require('./knexfile')[process.env.NODE_ENV]);
 
 knex.select('*').from('users').then(function(bots){
-	console.log('Rows:', bots.length);
+	console.log('# of Rows:', bots.length);
 });
