@@ -1,9 +1,21 @@
 // load .env variables
-require('dotenv').config();
+var dotenv = require('dotenv').config();
 
 // initialize knex with knexfile
-var knex = require('knex')(require('./knexfile')[process.env.NODE_ENV]);
+var knexfile = require('./knexfile');
+var knex = require('knex')(knexfile[process.env.NODE_ENV]);
 
-knex.select('*').from('users').then(function(bots){
-	console.log('# of Rows:', bots.length);
-});
+knex.select('email').from('users').orderBy('email').stream()
+	.on('data',function(row){
+		console.log(row.email);
+	})
+	.on('error', function (error) {
+      	console.log('Error:', error);
+    })
+    .on('end', function () {
+      	console.log('Finished.')
+    });
+
+knex.destroy();
+
+console.log('bye');
