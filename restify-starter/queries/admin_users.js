@@ -1,9 +1,11 @@
 var knex = require('../knexfile')
 var bcrypt = require('bcrypt-nodejs')
+var jwt = require('jsonwebtoken')
 
 function validate(req, res, next) {
-	knex.select('id, email, first_name, last_name, encrypted_password'.split(', '))
+	knex.select('admin_users.id, email, first_name, last_name, encrypted_password, selected_firm_id'.split(', '))
 		.from('admin_users')
+    .innerJoin('firms', 'firms.id', '=', 'admin_users.selected_firm_id')
     .where({ email: req.query.email })
     .limit(1)
     .then(function (data) {
@@ -11,14 +13,24 @@ function validate(req, res, next) {
         if (valid)
         {
           res.send({
-            status: 'success',
-            message: 'User validated',
-            data: {
+            access_token: {
+              token: jwt.sign({id: data[0].id}, process.env.JWT_SECRET, { expiresIn: '1h' }),
+              refresh_token: 'gibberish'
+            },
+            user: {
               id: data[0].id,
               email: data[0].email,
               first_name: data[0].first_name,
-              last_name: data[0].last_name
-            }
+              last_name: data[0].last_name,
+              firm: {
+
+              },
+              name: data[0].first_name + ' ' + data[0].last_name,
+              admin_user_type: {
+
+              }
+            },
+            success: true
           })
           return next()
 
