@@ -1,0 +1,15 @@
+{
+  "name": "knex-starter",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "bcrypt-nodejs": "0.0.3",
+    "dotenv": "^4.0.0",
+    "knex": "^0.13.0",
+    "mysql2": "^1.4.2",
+    "restify": "^5.2.0"
+  },
+  "devDependencies": {}
+}
