@@ -4,6 +4,7 @@ module.exports = (sequelize, DataType) => {
     name: { type: DataType.STRING, allowNull: false, validate: { notEmpty: true, }, },
   }, {
     tableName: 'firms',
+    underscored: true,
     timestamps: false
   });
 

@@ -4,6 +4,7 @@ module.exports = (sequelize, DataType) => {
     description: { type: DataType.STRING, allowNull: false, validate: { notEmpty: true, }, },
   }, {
     tableName: 'admin_user_types',
+    underscored: true,
     timestamps: false
   });
 

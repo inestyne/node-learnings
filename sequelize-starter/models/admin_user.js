@@ -8,33 +8,27 @@ module.exports = (sequelize, DataType) => {
     last_name: { type: DataType.STRING, allowNull: false, validate: { notEmpty: true, }, },
     first_name: { type: DataType.STRING, allowNull: false, validate: { notEmpty: true, }, },
     encrypted_password: { type: DataType.STRING, allowNull: false, validate: { notEmpty: true, }, },
-    selected_firm_id: { type: DataType.INTEGER },
-
-    AdminUserTypeId: { type: DataType.INTEGER, field: 'admin_user_type_id' },
-    FirmId: { type: DataType.INTEGER, field: 'firm_id' },
   }, {
     tableName: 'admin_users',
-    underscores: true,
-    createdAt: 'created_at',
-    updatedAt: 'updated_at',
+    underscored: true,
   })
 
   AdminUser.associate = function(models) {
     AdminUser.belongsTo(models.AdminUserType)
-    AdminUser.belongsTo(models.Firm)
+    AdminUser.belongsTo(models.Firm, {as: 'firm'})
+    AdminUser.belongsTo(models.Firm, {as: 'selected_firm'})
   }
 
   AdminUser.validate = async function(email, password) {
-    const user = await AdminUser.find({where:{email:email}})
-
     // bycrypt just throws errors :)
     try {
+      const user = await AdminUser.find({where:{email:email}})
       const valid = await bcrypt.compare(password, user.encrypted_password)
+      return user
     } catch (e) {
+      console.log(e)
       throw 'Usernamme or password no valid'
     }
-
-    return user
   }
 
   AdminUser.prototype.token = function() {
