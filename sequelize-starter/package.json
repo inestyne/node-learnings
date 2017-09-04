@@ -1,11 +1,11 @@
 {
-  "name": "knex-starter",
+  "name": "sequalize-starter",
   "version": "1.0.0",
   "scripts": {
     "start": "babel-node server.js"
   },
   "dependencies": {
-    "bcrypt-nodejs": "0.0.3",
+    "bcrypt-nodejs-as-promised": "^1.0.4",
     "consign": "^0.1.6",
     "dotenv": "^4.0.0",
     "jsonwebtoken": "^7.4.3",

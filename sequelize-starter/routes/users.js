@@ -1,18 +1,20 @@
 module.exports = ( app, server ) => {
-	const Users = app.db.models.Users;
+	const User = app.db.models.User;
 
-	server.get('/api/users', function (req, res, next) {
-		Users.findAll({
+	server.get('/api/users', async function (req, res, next) {
+    try {
+      const users = await User.findAll({
         where: {},
         limit: 100
       })
-      .then(result => {
-      	res.json(result) 
-      	return next()
-      })
-      .catch(err => {
+
+      res.json(users) 
+      return next()
+
+    } catch (err) {
         return next(err)
-      });
-	});
+
+    }
+	})
 }
 
