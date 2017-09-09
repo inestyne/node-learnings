@@ -8,7 +8,8 @@ import sequelize from 'sequelize'
 dotenv.config()
 
 // API Server
-const server = restify.createServer({ name: 'restify-starter', version: '1.0.0' });
+var namespace = '/api'
+const server = restify.createServer({ name: 'restify-starter', versions: [ '1.0.0' ] });
 server.use(restify.plugins.acceptParser(server.acceptable))
 server.use(restify.plugins.queryParser())
 server.use(restify.plugins.bodyParser())
@@ -18,9 +19,10 @@ consign({ verbose: false })
   .then('db.js')
   // .then('auth.js')
   // .then('libs/middlewares.js')
+  .then('middlewares')
   .then('routes')
   // .then('libs/boot.js')
-  .into(restify, server);
+  .into(restify, server, namespace);
 
 server.listen(3000, function () {
   console.log('%s listening at %s', server.name, server.url)

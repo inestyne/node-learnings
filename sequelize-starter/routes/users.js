@@ -1,7 +1,11 @@
-module.exports = ( app, server ) => {
-	const User = app.db.models.User;
+import restify_router from 'restify-router'
 
-	server.get('/api/users', async function (req, res, next) {
+module.exports = ( app, server, namespace ) => {
+  const router = new restify_router.Router();
+	
+  const User = app.db.models.User;
+
+	router.get('/users', async function (req, res, next) {
     try {
       const users = await User.findAll({
         where: {},
@@ -16,5 +20,7 @@ module.exports = ( app, server ) => {
 
     }
 	})
+
+  router.applyRoutes(server, namespace)
 }
 

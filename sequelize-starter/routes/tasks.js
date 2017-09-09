@@ -1,10 +1,14 @@
-module.exports = ( app, server ) => {
+import restify_router from 'restify-router'
+
+module.exports = ( app, server, namespace ) => {
+  const router = new restify_router.Router();
+
   const Firm = app.db.models.Firm;
   const Task = app.db.models.Task;
   const User = app.db.models.User;
   const AdminUser = app.db.models.AdminUser;
 
-	server.get('/api/tasks', async function (req, res, next) {
+	router.get('/tasks', async function (req, res, next) {
     try {
       const user = await AdminUser.find({where:{id:4}})
       const results = await Task.findAll({
@@ -35,5 +39,7 @@ module.exports = ( app, server ) => {
 
     }
 	})
+
+  router.applyRoutes(server, namespace)
 }
 

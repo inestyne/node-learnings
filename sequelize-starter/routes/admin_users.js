@@ -1,10 +1,14 @@
-module.exports = ( app, server ) => {
+import restify_router from 'restify-router'
+
+module.exports = ( app, server, namespace ) => {
+	const router = new restify_router.Router();
+	
 	const AdminUser = app.db.models.AdminUser;
 	const Firm = app.db.models.Firm;
 
-	server.post('/api/admin_users/validate', async function (req, res, next) {
+	router.post({ path: '/admin_users/sign_in', version: '1.0.0' }, async function (req, res, next) {
 		try {
-			const result = await AdminUser.validate(req.query.email, req.query.password)
+			const result = await AdminUser.validate(req.params.email, req.params.password)
 			res.json({
 	      access_token: {
 	        token: result.token(),
@@ -23,9 +27,10 @@ module.exports = ( app, server ) => {
 	  	return next()
 
 	  } catch(err) {
-      return next(err)
+	    return next(err)
 
 	  }
 	})
-}
 
+	router.applyRoutes(server, namespace)
+}
