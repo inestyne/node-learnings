@@ -14,7 +14,7 @@ const server = restify.createServer({ name: 'restify-starter', versions: [ '1.0.
 server.use(restify.plugins.authorizationParser());
 server.use(restify.plugins.acceptParser(server.acceptable))
 server.use(restify.plugins.queryParser())
-server.use(restify.plugins.bodyParser())
+server.use(restify.plugins.bodyParser({ mapParams: true }))
 
 // Resrouce Loader
 consign({ verbose: true })
@@ -25,7 +25,7 @@ consign({ verbose: true })
   .into(restify, server, namespace);
 
 // Server Launcher
-server.listen(3000, function () {
+server.listen(3001, function () {
   console.log('%s listening at %s', server.name, server.url)
 })
 

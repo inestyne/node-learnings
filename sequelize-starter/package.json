@@ -10,6 +10,7 @@
     "dotenv": "^4.0.0",
     "jsonwebtoken": "^7.4.3",
     "mysql2": "^1.4.2",
+    "nodemon": "^1.12.0",
     "restify": "^5.2.0",
     "restify-oauth2": "^4.0.4",
     "restify-router": "^0.4.2",
