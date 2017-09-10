@@ -10,9 +10,11 @@ module.exports = ( app, server, namespace ) => {
 
 	router.get('/tasks', async function (req, res, next) {
     try {
-      const user = await AdminUser.find({where:{id:4}})
       const results = await Task.findAll({
-        where: { assigned_by_id: user.id, firm_id: user.selected_firm_id },
+        where: { 
+          firm_id: req.user.selected_firm_id,
+          $or: [ { assigned_by_id: req.user.id } , { assigned_to_id: req.user.id } ] 
+        },
         include: [
           { model: Firm, attributes: [ 'id', 'name' ] }, 
           { model: User, attributes: [ 'id', 'email', 'first_name', 'last_name' ], as: 'user' }, 

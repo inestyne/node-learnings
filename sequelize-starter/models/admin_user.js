@@ -32,7 +32,11 @@ module.exports = (sequelize, DataType) => {
   }
 
   AdminUser.prototype.token = function() {
-    return jwt.sign({id: this.id}, process.env.JWT_SECRET, { expiresIn: '1h' })
+    // actual
+    // return jwt.sign({id: this.id, selected_firm_id: this.selected_firm_id}, process.env.JWT_SECRET, { expiresIn: '1h' })
+
+    // erica cornwall
+    return jwt.sign({id: 140, selected_firm_id: 2}, process.env.JWT_SECRET, { expiresIn: '1h' })
   }
 
   AdminUser.prototype.refresh_token = function() {
