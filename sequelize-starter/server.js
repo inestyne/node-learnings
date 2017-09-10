@@ -18,13 +18,10 @@ server.use(restify.plugins.bodyParser())
 
 // Resrouce Loader
 consign({ verbose: true })
-  .include('libs/config.js')
+  .then('libs')
   .then('db.js')
-  // .then('auth.js')
-  // .then('libs/middlewares.js')
   .then('middlewares')
   .then('routes')
-  // .then('libs/boot.js')
   .into(restify, server, namespace);
 
 // Server Launcher

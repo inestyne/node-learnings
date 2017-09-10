@@ -8,18 +8,19 @@ module.exports = ( app, server, namespace ) => {
   const User = app.db.models.User;
   const AdminUser = app.db.models.AdminUser;
 
-  const page_size = 5
+  const page_size = 10
 
 	router.get('/tasks', async function (req, res, next) {
     try {
       const current_page = parseInt(req.query.page)
 
-      const results = await Task.findAndCountAll({
-        where: { 
-          firm_id: req.user.selected_firm_id,
-          $or: [ { assigned_by_id: req.user.id } , { assigned_to_id: req.user.id } ] 
-        },
-        include: [
+      const scope = Task.scope(
+        { method: [ 'policy', req.user ] },
+        { method: [ req.query.filter || 'all', req.user ] }
+      )
+      
+      const results = await scope.findAndCountAll({
+         include: [
           { model: Firm, attributes: [ 'id', 'name' ] }, 
           { model: User, attributes: [ 'id', 'email', 'first_name', 'last_name' ], as: 'user' }, 
           { model: User, attributes: [ 'id', 'email', 'first_name', 'last_name' ], as: 'created_by' }, 
@@ -40,7 +41,7 @@ module.exports = ( app, server, namespace ) => {
       res.json({
         tasks: mapped,
         total_count: results.count,
-        total_pages: results.count / page_size,
+        total_pages: Math.floor( results.count / page_size ),
         current_page: current_page
       }) 
       return next()
