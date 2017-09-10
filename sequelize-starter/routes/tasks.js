@@ -8,9 +8,13 @@ module.exports = ( app, server, namespace ) => {
   const User = app.db.models.User;
   const AdminUser = app.db.models.AdminUser;
 
+  const page_size = 5
+
 	router.get('/tasks', async function (req, res, next) {
     try {
-      const results = await Task.findAll({
+      const current_page = parseInt(req.query.page)
+
+      const results = await Task.findAndCountAll({
         where: { 
           firm_id: req.user.selected_firm_id,
           $or: [ { assigned_by_id: req.user.id } , { assigned_to_id: req.user.id } ] 
@@ -23,16 +27,22 @@ module.exports = ( app, server, namespace ) => {
           { model: AdminUser, attributes: [ 'id', 'email', 'first_name', 'last_name' ], as: 'assigned_to' }, 
           { model: AdminUser, attributes: [ 'id', 'email', 'first_name', 'last_name' ], as: 'assigned_by' }, 
         ],  
-        limit: 25
+        offset: page_size * ( current_page - 1),
+        limit: page_size
       })
 
       // customn mapped instance methods
-      const mapped = await results.map(function(result){
+      const mapped = await results.rows.map(function(result){
         result.assigned_to.dataValues['refresh_token'] = result.assigned_to.refresh_token()
         return result
       })
 
-      res.json(mapped) 
+      res.json({
+        tasks: mapped,
+        total_count: results.count,
+        total_pages: results.count / page_size,
+        current_page: current_page
+      }) 
       return next()
 
     } catch (err) {
