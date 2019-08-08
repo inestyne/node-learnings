@@ -9,7 +9,6 @@ import consign from 'consign'
 dotenv.config()
 
 // API Server Setup
-var namespace = '/api'
 const server = restify.createServer({ name: 'restify-starter', versions: [ '1.0.0' ] });
 server.use(restify.plugins.authorizationParser());
 server.use(restify.plugins.acceptParser(server.acceptable))
@@ -22,7 +21,7 @@ consign({ verbose: true })
   .then('db.js')
   .then('middlewares')
   .then('routes')
-  .into(restify, server, namespace);
+  .into(restify, server, '/api')
 
 // Server Launcher
 server.listen(3001, function () {

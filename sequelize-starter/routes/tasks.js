@@ -34,7 +34,7 @@ module.exports = ( app, server, namespace ) => {
 
       // customn mapped instance methods
       const mapped = await results.rows.map(function(result){
-        result.assigned_to.dataValues['refresh_token'] = result.assigned_to.refresh_token()
+        // result.assigned_to.dataValues['refresh_token'] = result.assigned_to.refresh_token()
         return result
       })
 

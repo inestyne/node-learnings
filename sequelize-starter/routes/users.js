@@ -16,7 +16,7 @@ module.exports = ( app, server, namespace ) => {
       return next()
 
     } catch (err) {
-        return next(err)
+      return next(err)
 
     }
 	})

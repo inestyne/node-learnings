@@ -34,27 +34,34 @@ module.exports = (sequelize, DataType) => {
     }
   }
 
+  AdminUser.find_by_token = async function(token) {
+    try {
+      const oauth_token = await OAuthAccessToken.find({where:{ token: token }})
+      return await AdminUser.find({where:{ id: oauth_token.resource_owner_id }})
+    } catch (e) {
+      console.log(e)
+      throw 'Token invalid'
+    }
+  }
+
   AdminUser.prototype.create_token = async function(client_id, client_secret) {
-    await OAuthAccessToken.destroy({where:{ resource_owner_id: this.id }})
-
-    const app =  await OAuthApplication.find({where:{ uid: client_id, secret: client_secret }})
-    const token = await OAuthAccessToken.create({
-      resource_owner_id: this.id,
-      application_id: null,
-      token: jwt.sign({id: this.id, selected_firm_id: this.selected_firm_id}, process.env.JWT_SECRET, { expiresIn: '1h' }),
-      refresh_token: jwt.sign({id: this.id, selected_firm_id: this.selected_firm_id}, process.env.JWT_SECRET, { expiresIn: '1h' }),
-      expires_in: 7200,
-      scopes: 'user read and write preference',
-      created_at: new Date()
-    })
-
-    return token;
-
-    // actual
-    // return jwt.sign({id: this.id, selected_firm_id: this.selected_firm_id}, process.env.JWT_SECRET, { expiresIn: '1h' })
-
-    // erica cornwall
-    // return jwt.sign({id: 140, selected_firm_id: 2}, process.env.JWT_SECRET, { expiresIn: '1h' })
+    try {
+      await OAuthAccessToken.destroy({where:{ resource_owner_id: this.id }})
+      const app =  await OAuthApplication.find({where:{ uid: client_id, secret: client_secret }})
+      const token = await OAuthAccessToken.create({
+        resource_owner_id: this.id,
+        application_id: null,
+        token: jwt.sign({id: this.id, selected_firm_id: this.selected_firm_id}, process.env.JWT_SECRET, { expiresIn: '1h' }),
+        refresh_token: jwt.sign({id: this.id, selected_firm_id: this.selected_firm_id}, process.env.JWT_SECRET, { expiresIn: '1h' }),
+        expires_in: 7200,
+        scopes: 'user read and write preference',
+        created_at: new Date()
+      })
+      return token;
+    } catch (e) {
+      console.log(e)
+      throw e
+    }
   }
 
   return AdminUser

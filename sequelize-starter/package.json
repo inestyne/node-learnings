@@ -15,7 +15,8 @@
     "restify-oauth2": "^4.0.4",
     "restify-router": "^0.4.2",
     "semver": "^5.4.1",
-    "sequelize": "^4.8.0"
+    "sequelize": "^4.8.0",
+    "solr-client": "^0.7.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
